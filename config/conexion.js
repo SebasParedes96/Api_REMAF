@@ -1,4 +1,5 @@
 const mysql = require('mysql');
+// credenciales vencidas
 const conexion = mysql.createConnection({
     user: 'k5smvi6hogzj',
     password: 'pscale_pw_SVfzrfY3JpI31M5hpj8AieUoxrOt602uXxO8lbVpVe4',
