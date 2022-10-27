@@ -1,11 +1,11 @@
 const mysql = require('mysql');
-// credenciales vencidas
 const conexion = mysql.createConnection({
-    user: 'k5smvi6hogzj',
-    password: 'pscale_pw_SVfzrfY3JpI31M5hpj8AieUoxrOt602uXxO8lbVpVe4',
-    host: 'dxr75bqu8ovs.aws-sa-east-1-1.psdb.cloud',
+    user: 'z1p9pxr3rcfwhg4nlmef',
+    password: 'pscale_pw_6ClPBcjEd3Nw4kc3IY2iASmKsMPLcANgVCJwB6Fgci2',
+    host: 'aws-sa-east-1.connect.psdb.cloud',
     database: 'remaf',
     ssl:{}
+    
 });
 
 conexion.connect((err)=>{
