@@ -73,6 +73,18 @@ router.delete('/estaciones/:id', (req, res) => {
     })
 })
 
+//get all localidades
+
+router.get('/localidades', (req, res) => {
+    let sql = `select * from localidades`
+    conexion.query(sql, (err, rows, fields) => {
+        if (err) throw err;
+        else {
+            res.json(rows)
+        }
+    })
+})
+
 // get ultima medicion de la estacion
 
 router.get('/:id', (req, res) => {
