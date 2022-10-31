@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const conexion = require('./config/conexion')
+const conexion = require('./../config/conexion')
 
 const cors = require('cors')
 const { json } = require('express')
