@@ -9,7 +9,7 @@ const { json } = require('express')
 // get estaciones 
 
 router.get('/estaciones', (req, res) => {
-    let sql = 'select * from estaciones'
+    let sql = `select * from estaciones where fecha_baja = null`
     conexion.query(sql, (err, rows, fields) => {
         if (err) throw err;
         else {
@@ -18,11 +18,67 @@ router.get('/estaciones', (req, res) => {
     })
 })
 
+// add estaciones
+
+router.put('/estaciones', (req, res) => {
+    const { id } = req.params
+    const { nombre, id_localidad, direccion, latitude, longitude } = req.body
+
+    let sql = `update estaciones set
+    descri_estaciones = '${nombre}',
+    direccion_estaciones = '${direccion}',
+    rela_localidad = '${id_localidad}',
+    latitude = '${latitude}',
+    longitude = '${longitude}'
+    where id = '${id}'`
+
+    conexion.query(sql, (err, rows, fields) => {
+        if (err) {
+            throw err
+        } else {
+            res.json({ status: 'Estacion modificada!' })
+        }
+    })
+})
+
+// update estaciones
+
+router.post('/estaciones/', (req, res) => {
+    const { nombre, id_localidad, direccion, latitude, longitude } = req.body
+
+    let sql = `INSERT into estaciones 
+    (descri_estaciones,direccion_estaciones,rela_localidad,latitude,longitude)
+    VALUES (${nombre},${direccion},${id_localidad},${latitude},${longitude})`
+
+    conexion.query(sql, (err, rows, fields) => {
+        if (err) {
+            throw err
+        } else {
+            res.json({ status: 'Estacion agregada!' })
+        }
+    })
+})
+
+// delete estaciones
+
+router.delete('/estaciones/:id', (req, res) => {
+    const { id } = req.params
+    let sql = `UPDATE estaciones set 
+    fecha_baja = null where id_estaciones = ${id}`
+    conexion.query(sql, (err, rows, fields) => {
+        if (err) throw err;
+        else {
+            res.json({ status: 'Estacion Eliminada' })
+        }
+    })
+})
+
 // get ultima medicion de la estacion
 
 router.get('/:id', (req, res) => {
     const { id } = req.params
-    let sql = `SELECT * FROM sensores,estaciones WHERE rela_estaciones=id_estaciones and id_estaciones='${id}' ORDER by id_sensores DESC LIMIT 1 `
+    let sql = `SELECT * FROM sensores,estaciones WHERE rela_estaciones=id_estaciones 
+    and id_estaciones='${id}' fecha_baja = null ORDER by id_sensores DESC LIMIT 1 `
     conexion.query(sql, (err, rows, fields) => {
         if (err) throw err;
         else {
@@ -35,7 +91,9 @@ router.get('/:id', (req, res) => {
 
 router.get('/:id/:date', (req, res) => {
     const { id, date } = req.params
-    let sql = `SELECT * FROM sensores,estaciones WHERE rela_estaciones=id_estaciones and id_estaciones='${id}'  and   date_estaciones like '%${date}%' ORDER by id_sensores DESC`
+    let sql = `SELECT * FROM sensores,estaciones WHERE rela_estaciones=id_estaciones 
+    and fecha_baja = null and id_estaciones='${id}'  
+    and   date_estaciones like '%${date}%' ORDER by id_sensores DESC`
     conexion.query(sql, (err, rows, fields) => {
         if (err) throw err;
         else {
@@ -64,7 +122,8 @@ router.get('/', (req, res) => {
     INNER JOIN localidades 
     ON localidades.id_localidad = estaciones.rela_localidad
     INNER JOIN sensores 
-    ON estaciones.ultima_medicion_sensores = sensores.id_sensores`
+    ON estaciones.ultima_medicion_sensores = sensores.id_sensores
+    where fecha_baja = null`
     conexion.query(sql, (err, rows, fields) => {
         if (err) throw err;
         else {

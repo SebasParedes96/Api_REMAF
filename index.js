@@ -31,7 +31,7 @@ app.set('port',port)
 
 // rutas
 
-app.use('/api',require('./rutas'))
+app.use('/api',require('./routes/estaciones'))
 
 
 
