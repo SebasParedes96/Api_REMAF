@@ -9,7 +9,7 @@ const { json } = require('express')
 // get estaciones 
 
 router.get('/estaciones', (req, res) => {
-    let sql = `select * from estaciones where fecha_baja = null`
+    let sql = `select * from estaciones where fecha_baja is null`
     conexion.query(sql, (err, rows, fields) => {
         if (err) throw err;
         else {
@@ -64,7 +64,7 @@ router.post('/estaciones/', (req, res) => {
 router.delete('/estaciones/:id', (req, res) => {
     const { id } = req.params
     let sql = `UPDATE estaciones set 
-    fecha_baja = null where id_estaciones = ${id}`
+    fecha_baja is null where id_estaciones = ${id}`
     conexion.query(sql, (err, rows, fields) => {
         if (err) throw err;
         else {
@@ -90,7 +90,7 @@ router.get('/localidades', (req, res) => {
 router.get('/:id', (req, res) => {
     const { id } = req.params
     let sql = `SELECT * FROM sensores,estaciones WHERE rela_estaciones=id_estaciones 
-    and id_estaciones='${id}' fecha_baja = null ORDER by id_sensores DESC LIMIT 1 `
+    and id_estaciones='${id}' fecha_baja is null ORDER by id_sensores DESC LIMIT 1 `
     conexion.query(sql, (err, rows, fields) => {
         if (err) throw err;
         else {
@@ -104,7 +104,7 @@ router.get('/:id', (req, res) => {
 router.get('/:id/:date', (req, res) => {
     const { id, date } = req.params
     let sql = `SELECT * FROM sensores,estaciones WHERE rela_estaciones=id_estaciones 
-    and fecha_baja = null and id_estaciones='${id}'  
+    and fecha_baja is null and id_estaciones='${id}'  
     and   date_estaciones like '%${date}%' ORDER by id_sensores DESC`
     conexion.query(sql, (err, rows, fields) => {
         if (err) throw err;
@@ -135,7 +135,7 @@ router.get('/', (req, res) => {
     ON localidades.id_localidad = estaciones.rela_localidad
     INNER JOIN sensores 
     ON estaciones.ultima_medicion_sensores = sensores.id_sensores
-    where fecha_baja = null`
+    where fecha_baja is null`
     conexion.query(sql, (err, rows, fields) => {
         if (err) throw err;
         else {
