@@ -90,7 +90,7 @@ router.get('/localidades', (req, res) => {
 router.get('/:id', (req, res) => {
     const { id } = req.params
     let sql = `SELECT * FROM sensores,estaciones WHERE rela_estaciones=id_estaciones 
-    and id_estaciones='${id}' fecha_baja is null ORDER by id_sensores DESC LIMIT 1 `
+    and id_estaciones='${id}' and fecha_baja is null ORDER by id_sensores DESC LIMIT 1 `
     conexion.query(sql, (err, rows, fields) => {
         if (err) throw err;
         else {
@@ -105,7 +105,7 @@ router.get('/:id/:date', (req, res) => {
     const { id, date } = req.params
     let sql = `SELECT * FROM sensores,estaciones WHERE rela_estaciones=id_estaciones 
     and fecha_baja is null and id_estaciones='${id}'  
-    and   date_estaciones like '%${date}%' ORDER by id_sensores DESC`
+    and DATE_FORMAT(date_estaciones,'%Y-%m-%d') = ${date} ORDER by id_sensores DESC`
     conexion.query(sql, (err, rows, fields) => {
         if (err) throw err;
         else {
@@ -114,7 +114,22 @@ router.get('/:id/:date', (req, res) => {
     })
 })
 
-// get todas las mediciones de un estacion en una fecha
+// get todas las mediciones de un estacion en un periodo
+
+router.get('/:id/:dateDesde/:dateHasta', (req, res) => {
+    const { id, dateDesde, dateHasta } = req.params
+    let sql = `SELECT * FROM sensores,estaciones WHERE rela_estaciones=id_estaciones 
+    and fecha_baja is null and id_estaciones='${id}'  
+    and   date_estaciones > ${dateDesde} and date_estaciones >= ${dateHasta} ORDER by id_sensores DESC`
+    conexion.query(sql, (err, rows, fields) => {
+        if (err) throw err;
+        else {
+            res.json(rows)
+        }
+    })
+})
+
+// ultima medicion de cada estacion
 
 router.get('/', (req, res) => {
     let sql = `SELECT
