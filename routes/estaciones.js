@@ -115,7 +115,7 @@ router.get('/:id', (req, res) => {
 // get todas las mediciones de un estacion en una fecha
 
 router.get('/:id/:date',
-param('date').isISO8601().isDate(), (req, res) => {
+param('date',"date is required").isISO8601().isDate(), (req, res) => {
     const { id, date } = req.params
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -136,8 +136,8 @@ param('date').isISO8601().isDate(), (req, res) => {
 // get todas las mediciones de un estacion en un periodo
 
 router.get('/:id/:dateDesde/:dateHasta',
-param('dateDesde').isISO8601().isDate(),
-param('dateHasta').isISO8601().isDate(),
+param('dateDesde',"dateDesde is required").isISO8601().isDate(),
+param('dateHasta',"dateHasta is required").isISO8601().isDate(),
  (req, res) => {
     const { id, dateDesde, dateHasta } = req.params
     const errors = validationResult(req);
