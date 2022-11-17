@@ -144,11 +144,12 @@ param('dateHasta',"dateHasta is required").isISO8601().isDate(),
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-
+console.log(dateDesde)
+console.log(dateHasta)
     try {
         let sql = `SELECT * FROM sensores,estaciones WHERE rela_estaciones=id_estaciones 
-        and fecha_baja is null and id_estaciones='${id}'  
-        and   date_estaciones <= ${dateDesde} and date_estaciones >= ${dateHasta} ORDER by id_sensores DESC`
+        and fecha_baja is null and id_estaciones=${id} 
+        and DATE_FORMAT(date_estaciones,'%Y-%m-%d') BETWEEN '${dateDesde}' AND '${dateHasta}' ORDER by id_sensores DESC`
         conexion.query(sql, (err, rows, fields) => {
             if (err) throw err;
             else {
