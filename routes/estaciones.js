@@ -135,7 +135,7 @@ param('date',"date is required").isISO8601().isDate(), (req, res) => {
 
 // get mediciones de la ultima semana de una estacion
 
-router.get('/estaciones/week/:id/', (req, res) => {
+router.get('/estaciones/week/stadist/:id/', (req, res) => {
     const { id } = req.params
 
     let sqlDateHasta = `SELECT * FROM sensores,estaciones WHERE rela_estaciones=id_estaciones 
