@@ -124,11 +124,36 @@ param('date',"date is required").isISO8601().isDate(), (req, res) => {
 
     let sql = `SELECT * FROM sensores,estaciones WHERE rela_estaciones=id_estaciones 
     and fecha_baja is null and id_estaciones='${id}'  
-    and DATE_FORMAT(date_estaciones,'%Y-%m-%d') = ${date} ORDER by id_sensores DESC`
+    and DATE_FORMAT(date_estaciones,'%Y-%m-%d') = '${date}' ORDER by id_sensores DESC`
     conexion.query(sql, (err, rows, fields) => {
         if (err) throw err;
         else {
             res.json(rows)
+        }
+    })
+})
+
+// get mediciones de la ultima semana de una estacion
+
+router.get('/estaciones/week/:id/', (req, res) => {
+    const { id } = req.params
+
+    let sqlDateHasta = `SELECT * FROM sensores,estaciones WHERE rela_estaciones=id_estaciones 
+    and id_estaciones='${id}' and fecha_baja is null ORDER by id_sensores DESC LIMIT 1 `
+    conexion.query(sqlDateHasta, (err, rows, fields) => {
+        if (err) throw err;
+        else {
+            let dateString = rows[0].date_estaciones.toISOString();
+            const dateHasta =  dateString.slice(0,19).replace('T',' ');
+            let sql = `SELECT * FROM sensores,estaciones WHERE rela_estaciones=id_estaciones 
+            and fecha_baja is null and id_estaciones=${id} 
+            and DATE_FORMAT(date_estaciones,'%Y-%m-%d') BETWEEN  date_add('${dateHasta}', interval -7 day) AND '${dateHasta}' ORDER by id_sensores DESC`
+            conexion.query(sql, (err, rows, fields) => {
+                if (err) throw err;
+                else {
+                    res.json(rows)
+                }
+            })
         }
     })
 })
