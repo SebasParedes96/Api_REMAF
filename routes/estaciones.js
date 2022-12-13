@@ -169,8 +169,6 @@ param('dateHasta',"dateHasta is required").isISO8601().isDate(),
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-console.log(dateDesde)
-console.log(dateHasta)
     try {
         let sql = `SELECT * FROM sensores,estaciones WHERE rela_estaciones=id_estaciones 
         and fecha_baja is null and id_estaciones=${id} 
